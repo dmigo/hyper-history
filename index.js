@@ -154,6 +154,24 @@ exports.decorateTerm = (Term, { React, notify }) => {
             allTerminals[self.props.uid] = term;
             window.HYPER_HISTORY_TERM_ALL = allTerminals;
             window.HYPER_HISTORY_TERM = currTerminal = term;
+
+            const handler = [
+                'keydown',
+                function(e) {
+                    if(e.altKey && e.ctrlKey && e.keyCode>48 && e.keyCode<58)
+                    {
+                        e.preventDefault();
+                        const entry = historyEntries[e.keyCode - 49];
+                        if(entry)
+                            activeItem(entry)
+                    }
+                    console.log(e)
+                }
+            ]
+
+            term.uninstallKeyboard();
+            term.keyboard.handlers_ = [handler].concat(term.keyboard.handlers_);
+            term.installKeyboard();
         }
 
         render() {
